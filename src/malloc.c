@@ -14,9 +14,9 @@
 
 void	*malloc(size_t size)
 {
-	void	*mem;
+	static t_region		region = NULL;
+	void				*mem;
 
-	write(1, "a", 1);
 	if (size < 1)
 		return (NULL);
 	mem = mmap(0, size, PROT_READ | PROT_WRITE, MAP_ANON | MAP_PRIVATE, -1, 0);

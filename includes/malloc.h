@@ -20,10 +20,12 @@
 **MALLOC VARS
 */
 # define TINY_MAX 992 
-# define TINY_SIZE (int)((2000000 + getpagesize()) / getpagesize()) * getpagesize()
+# define TINY_SIZE (int)((2000000 + getpagesize()) / getpagesize()) *\
+ getpagesize()
 
 # define SMALL_MAX 127000
-# define SMALL_SIZE (int)((16000000 + getpagesize()) / getpagesize()) * getpagesize()
+# define SMALL_SIZE (int)((16000000 + getpagesize()) / getpagesize()) *\
+ getpagesize()
 
 /*
 **PAGES
