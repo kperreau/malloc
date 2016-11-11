@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   init_regions.c                                      :+:      :+:    :+:  */
+/*   init_regions.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kperreau <kperreau@42.fr>                  +#+  +:+       +#+        */
+/*   By: kperreau <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2016/06/28 17:26:29 by kperreau          #+#    #+#             */
-/*   Updated: 2016/10/28 17:27:08 by kperreau         ###   ########.fr       */
+/*   Created: 2016/11/11 17:05:25 by kperreau          #+#    #+#             */
+/*   Updated: 2016/11/11 17:28:16 by kperreau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ static t_region		*init_region_tiny(void *mem)
 	t_page				*ptiny;
 
 	rtiny = (t_region*)mem;
-	rtiny->lfree_size = TINY_SIZE;
+	rtiny->free_size = TINY_SIZE;
 	rtiny->type = TINY;
 	rtiny->prev = NULL;
 	rtiny->next = NULL;
@@ -38,7 +38,7 @@ static t_region		*init_region_small(void *mem)
 	t_page				*psmall;
 
 	rsmall = (t_region*)mem;
-	rsmall->lfree_size = SMALL_SIZE;
+	rsmall->free_size = SMALL_SIZE;
 	rsmall->type = SMALL;
 	rsmall->prev = NULL;
 	rsmall->next = NULL;
@@ -50,6 +50,24 @@ static t_region		*init_region_small(void *mem)
 	psmall->prev = NULL;
 	psmall->next = NULL;
 	return (rsmall);
+}
+
+t_region			*add_region(t_region *regions, t_page_type type\
+	, size_t lsize)
+{
+	size_t		size;
+	void		*mem;
+
+	while (regions->next != NULL)
+		regions = regions->next;
+	if (type == LARGE)
+		size = lsize + sizeof(t_region);
+	else
+		size = ((type == TINY) ? TINY_SIZE : SMALL_SIZE) + sizeof(t_region);
+	mem = mmap(0, size, PROT_READ | PROT_WRITE, MAP_ANON | MAP_PRIVATE, -1, 0);
+	if (type == TINY)
+		regions->next = init_region_small(mem);
+	return (regions->next);
 }
 
 t_region			*init_regions(void)

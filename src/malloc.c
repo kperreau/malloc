@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   malloc.c                                            :+:      :+:    :+:  */
+/*   malloc.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kperreau <kperreau@42.fr>                  +#+  +:+       +#+        */
+/*   By: kperreau <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2016/06/28 17:26:29 by kperreau          #+#    #+#             */
-/*   Updated: 2016/10/28 17:44:32 by kperreau         ###   ########.fr       */
+/*   Created: 2016/11/11 17:06:42 by kperreau          #+#    #+#             */
+/*   Updated: 2016/11/11 17:06:44 by kperreau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,5 @@ void	*malloc(size_t size)
 		return (NULL);
 	if (size <= TINY_MAX)
 		mem = add_tiny(region, size);
-	// mem = mmap(0, size, PROT_READ | PROT_WRITE, MAP_ANON | MAP_PRIVATE, -1, 0);
 	return (mem);
 }
