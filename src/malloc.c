@@ -14,11 +14,13 @@
 
 void	*malloc(size_t size)
 {
-	static t_region		region = NULL;
+	static t_region		*region = NULL;
 	void				*mem;
 
-	if (size < 1)
+	if (size < 1 || (region == NULL && (region = init_regions()) == NULL))
 		return (NULL);
-	mem = mmap(0, size, PROT_READ | PROT_WRITE, MAP_ANON | MAP_PRIVATE, -1, 0);
+	if (size <= TINY_MAX)
+		mem = add_tiny(region, size);
+	// mem = mmap(0, size, PROT_READ | PROT_WRITE, MAP_ANON | MAP_PRIVATE, -1, 0);
 	return (mem);
 }

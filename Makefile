@@ -24,7 +24,7 @@ INCLUDESDIR = includes
 
 # Files vars
 
-CFILES = malloc.c free.c
+CFILES = init_regions.c malloc.c free.c tiny.c
 
 SRC = $(patsubst %, $(SRCDIR)/%, $(CFILES))
 
@@ -36,7 +36,8 @@ HEADERS = $(patsubst %, $(INCLUDESDIR)/%, $(HFILES))
 
 # COMPILATION
 
-ERRORFLAGS = -Wall -Werror -Wextra -W
+#ERRORFLAGS = -Wall -Werror -Wextra -W
+ERRORFLAGS = 
 #-march=native -Ofast
 
 INCLUDEFLAGS = -I $(INCLUDESDIR)/
@@ -57,8 +58,8 @@ TOGIT =	$(SRC) \
 all: $(NAME)
 
 $(NAME): $(OBJ)
-			@$(CC) $(FLAGS) -fPIC $(OBJ) -shared -o $(NAME)
-			ln -s $(NAME) libft_malloc.so
+			@$(CC) $(FLAGS) $(OBJ) -fPIC -shared -o $(NAME)
+			@#ln -s $(NAME) libft_malloc.so
 
 re: fclean all
 
@@ -71,7 +72,7 @@ fclean: clean
 			@rm -f $(NAME)
 
 %.o: %.c
-			@$(CC) -c $< $(FLAGS) -o $@
+			@$(CC) -c $< $(FLAGS) -fPIC -shared -o $@
 
 git:
 		git add $(TOGIT)
