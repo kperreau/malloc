@@ -6,7 +6,7 @@
 /*   By: kperreau <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/11 17:06:42 by kperreau          #+#    #+#             */
-/*   Updated: 2016/11/12 17:38:54 by kperreau         ###   ########.fr       */
+/*   Updated: 2016/11/12 20:05:25 by kperreau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,5 +21,7 @@ void	*malloc(size_t size)
 		return (NULL);
 	if (size <= TINY_MAX)
 		mem = add_tiny(region, size);
+	else if (size > TINY_MAX && size <= SMALL_MAX)
+		mem = add_small(region, size);
 	return (mem);
 }

@@ -6,7 +6,7 @@
 /*   By: kperreau <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/11 17:05:25 by kperreau          #+#    #+#             */
-/*   Updated: 2016/11/11 17:28:16 by kperreau         ###   ########.fr       */
+/*   Updated: 2016/11/12 20:09:04 by kperreau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,11 +61,13 @@ t_region			*add_region(t_region *regions, t_page_type type\
 	while (regions->next != NULL)
 		regions = regions->next;
 	if (type == LARGE)
-		size = lsize + sizeof(t_region);
+		size = lsize + sizeof(t_region) + sizeof(t_page);
 	else
 		size = ((type == TINY) ? TINY_SIZE : SMALL_SIZE) + sizeof(t_region);
 	mem = mmap(0, size, PROT_READ | PROT_WRITE, MAP_ANON | MAP_PRIVATE, -1, 0);
 	if (type == TINY)
+		regions->next = init_region_tiny(mem);
+	else if (type == SMALL)
 		regions->next = init_region_small(mem);
 	return (regions->next);
 }

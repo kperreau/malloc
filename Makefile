@@ -6,7 +6,7 @@
 #    By: kperreau <kperreau@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2014/12/05 14:10:51 by kperreau          #+#    #+#              #
-#    Updated: 2016/11/11 16:17:25 by kperreau         ###   ########.fr        #
+#    Updated: 2016/11/12 20:16:56 by kperreau         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,7 +24,7 @@ INCLUDESDIR = includes
 
 # Files vars
 
-CFILES = init_regions.c malloc.c free.c tiny.c
+CFILES = init_regions.c malloc.c free.c tiny.c small.c
 
 SRC = $(patsubst %, $(SRCDIR)/%, $(CFILES))
 

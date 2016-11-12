@@ -6,7 +6,7 @@
 /*   By: kperreau <kperreau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/01/19 16:40:01 by kperreau          #+#    #+#             */
-/*   Updated: 2016/11/11 17:28:20 by kperreau         ###   ########.fr       */
+/*   Updated: 2016/11/12 19:53:41 by kperreau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,7 @@ void			*malloc(size_t size);
 void			free(void *ptr);
 t_region		*init_regions(void);
 t_page			*add_tiny(t_region *regions, size_t size);
+t_page			*add_small(t_region *regions, size_t size);
 t_region		*add_region(t_region *regions, t_page_type type, size_t lsize);
 
 #endif
