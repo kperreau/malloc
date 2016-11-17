@@ -18,15 +18,16 @@ static t_region		*init_region_tiny(void *mem)
 	t_page				*ptiny;
 
 	rtiny = (t_region*)mem;
-	rtiny->free_size = TINY_SIZE;
+	rtiny->free_size = TINY_SIZE - sizeof(t_page);
 	rtiny->type = TINY;
 	rtiny->prev = NULL;
 	rtiny->next = NULL;
 	rtiny->page = sizeof(t_region) + mem;
+	rtiny->last_page = sizeof(t_region) + mem;
 	ptiny = rtiny->page;
-	ptiny->size = TINY_SIZE;
+	ptiny->size = TINY_SIZE - sizeof(t_page);
 	ptiny->is_free = 1;
-	ptiny->data = sizeof(t_page) + (void*)rtiny;
+	ptiny->data = sizeof(t_page) + (void*)ptiny;
 	ptiny->prev = NULL;
 	ptiny->next = NULL;
 	return (rtiny);
@@ -38,18 +39,40 @@ static t_region		*init_region_small(void *mem)
 	t_page				*psmall;
 
 	rsmall = (t_region*)mem;
-	rsmall->free_size = SMALL_SIZE;
+	rsmall->free_size = SMALL_SIZE - sizeof(t_page);
 	rsmall->type = SMALL;
 	rsmall->prev = NULL;
 	rsmall->next = NULL;
 	rsmall->page = sizeof(t_region) + mem;
+	rsmall->last_page = sizeof(t_region) + mem;
 	psmall = rsmall->page;
-	psmall->size = SMALL_SIZE;
+	psmall->size = SMALL_SIZE - sizeof(t_page);
 	psmall->is_free = 1;
-	psmall->data = sizeof(t_page) + (void*)rsmall;
+	psmall->data = sizeof(t_page) + (void*)psmall;
 	psmall->prev = NULL;
 	psmall->next = NULL;
 	return (rsmall);
+}
+
+static t_region		*init_region_large(void *mem, size_t size)
+{
+	t_region			*rlarge;
+	t_page				*plarge;
+
+	rlarge = (t_region*)mem;
+	rlarge->free_size = size;
+	rlarge->type = LARGE;
+	rlarge->prev = NULL;
+	rlarge->next = NULL;
+	rlarge->page = sizeof(t_region) + mem;
+	rlarge->last_page = sizeof(t_region) + mem;
+	plarge = rlarge->page;
+	plarge->size = size;
+	plarge->is_free = 1;
+	plarge->data = sizeof(t_page) + (void*)plarge;
+	plarge->prev = NULL;
+	plarge->next = NULL;
+	return (rlarge);
 }
 
 t_region			*add_region(t_region *regions, t_page_type type\
@@ -60,6 +83,7 @@ t_region			*add_region(t_region *regions, t_page_type type\
 
 	while (regions->next != NULL)
 		regions = regions->next;
+
 	if (type == LARGE)
 		size = lsize + sizeof(t_region) + sizeof(t_page);
 	else
@@ -69,6 +93,9 @@ t_region			*add_region(t_region *regions, t_page_type type\
 		regions->next = init_region_tiny(mem);
 	else if (type == SMALL)
 		regions->next = init_region_small(mem);
+	else
+		regions->next = init_region_large(mem, lsize);
+	regions->next->prev = regions;
 	return (regions->next);
 }
 
@@ -84,5 +111,6 @@ t_region			*init_regions(void)
 		return (NULL);
 	regions = init_region_tiny(mem);
 	regions->next = init_region_small(mem + sizeof(t_region) + TINY_SIZE);
+	regions->next->prev = regions;
 	return (mem);
 }

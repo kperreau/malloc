@@ -12,20 +12,12 @@
 
 #include "malloc.h"
 
-#define LONG_MAX 9223372036854775807L
-#define LONG_MIN (-LONG_MAX - 1L)
-
 void	ft_putnbr(long n)
 {
 	char	c;
 
 	if (n < 0)
 	{
-		if (n == LONG_MIN)
-		{
-			write(1, "-9223372036854775808", 15);
-			return ;
-		}
 		write(1, "-", 1);
 		n = -n;
 	}
@@ -47,7 +39,7 @@ static t_page		*find_tiny_page(t_page *pages, size_t size)
 	{
 		if (pages->is_free && pages->size >= size)
 			return (pages);
-		pages = pages->next;
+		pages = pages->prev;
 	}
 	return (NULL);
 }
@@ -60,7 +52,7 @@ static void		*find_tiny_region(t_region *regions, size_t size, void *ret[2])
 	{
 		if (regions->type == TINY && regions->free_size >= size)
 		{
-			page = find_tiny_page(regions->page, size);
+			page = find_tiny_page(regions->last_page, size);
 			if (page != NULL)
 			{
 				ret[0] = page;
@@ -73,22 +65,38 @@ static void		*find_tiny_region(t_region *regions, size_t size, void *ret[2])
 	return (NULL);
 }
 
-static t_page		*add_tiny_init(t_region *regions, t_page *page, size_t size)
+static t_page		*add_tiny_init(t_region *regions, t_page *page\
+	, size_t size, t_region *cregion)
 {
-	if (page->next == NULL && (void*)page + sizeof(t_page) + 1 < (void*)regions \
-		+ TINY_SIZE + sizeof(t_page))
+	t_page		*npage;
+
+	if (page->next == NULL && (void*)page + size + sizeof(t_page) < \
+		(void*)regions + TINY_SIZE)
 	{
-		page->next = sizeof(t_page) + (void*)page + size;
-		page->next->next = NULL;
-		page->next->prev = page;
-		page->next->is_free = 1;
-		ft_putnbr(page->size - (size + sizeof(t_page)));
-		write(1, "\n", 1);
-		page->next->size = page->size - (size + sizeof(t_page));
-		page->next->data = sizeof(t_page) + (void*)page->next;
+		npage = (void*)page + sizeof(t_page) + size;
+		npage->next = NULL;
+		npage->prev = page;
+		page->next = npage;
+		npage->is_free = 1;
+		npage->size = page->size - (size + sizeof(t_page));
+		npage->data = sizeof(t_page) + (void*)npage;
+		cregion->last_page = npage;
+		// cregion->free_size -= sizeof(t_page);
+	}
+	else if (page->size < size)
+	{
+		npage = (void*)page + sizeof(t_page) + size;
+		npage->next = page->next;
+		npage->prev = page;
+		page->next = npage;
+		npage->is_free = 1;
+		npage->size = page->size - (size + sizeof(t_page));
+		npage->data = sizeof(t_page) + (void*)npage;
+		// cregion->free_size -= sizeof(t_page);
 	}
 	page->is_free = 0;
 	page->size = size;
+	cregion->free_size = (long)(cregion->free_size - (sizeof(t_page) + size)) <= 0 ? 0 : cregion->free_size - (sizeof(t_page) + size);
 	return (page);
 }
 
@@ -106,11 +114,8 @@ t_page				*add_tiny(t_region *regions, size_t size)
 	else
 	{
 		cregion = add_region(regions, TINY, size);
-		//ft_putnbr(cregion->free_size);
-		//write(1, "\n", 1);
 		page = cregion->page;
 	}
-	cregion->free_size -= sizeof(t_page) + size;
-	add_tiny_init(cregion, page, size);
+	add_tiny_init(regions, page, size, cregion);
 	return (page->data);
 }

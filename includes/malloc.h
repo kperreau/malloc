@@ -20,12 +20,13 @@
 /*
 **MALLOC VARS
 */
-# define TINY_MAX 992 
-# define TINY_SIZE (int)((2000000 + getpagesize()) / getpagesize()) *\
+# define M 1000000
+# define TINY_MAX 992
+# define TINY_SIZE (int)((2*M + getpagesize()) / getpagesize()) *\
  getpagesize()
 
 # define SMALL_MAX 127000
-# define SMALL_SIZE (int)((16000000 + getpagesize()) / getpagesize()) *\
+# define SMALL_SIZE (int)((16*M + getpagesize()) / getpagesize()) *\
  getpagesize()
 
 /*
@@ -46,6 +47,7 @@ typedef struct	s_region
 	struct s_region	*next;
 	struct s_region	*prev;
 	struct s_page	*page;
+	struct s_page	*last_page;
 }				t_region;
 
 typedef struct	s_page
@@ -57,11 +59,14 @@ typedef struct	s_page
 	struct s_page	*prev;
 }				t_page;
 
+t_region		*ft_singleton(void);
 void			*malloc(size_t size);
 void			free(void *ptr);
 t_region		*init_regions(void);
 t_page			*add_tiny(t_region *regions, size_t size);
 t_page			*add_small(t_region *regions, size_t size);
+t_page			*add_large(t_region *regions, size_t size);
 t_region		*add_region(t_region *regions, t_page_type type, size_t lsize);
+void			*realloc(void *ptr, size_t size);
 
 #endif

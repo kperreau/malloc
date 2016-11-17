@@ -16,9 +16,9 @@ static t_page		*find_small_page(t_page *pages, size_t size)
 {
 	while (pages != NULL)
 	{
-		if (pages->is_free && pages->size >= sizeof(t_page) + size)
+		if (pages->is_free && pages->size >= size)
 			return (pages);
-		pages = pages->next;
+		pages = pages->prev;
 	}
 	return (NULL);
 }
@@ -29,10 +29,9 @@ static void		*find_small_region(t_region *regions, size_t size, void *ret[2])
 
 	while (regions != NULL)
 	{
-		if (regions->type == SMALL &&
-			regions->free_size >= sizeof(t_page) + size)
+		if (regions->type == SMALL && regions->free_size >= size)
 		{
-			page = find_small_page(regions->page, size);
+			page = find_small_page(regions->last_page, size);
 			if (page != NULL)
 			{
 				ret[0] = page;
@@ -45,20 +44,38 @@ static void		*find_small_region(t_region *regions, size_t size, void *ret[2])
 	return (NULL);
 }
 
-static t_page		*add_small_init(t_region *regions, t_page *page, size_t size)
+static t_page		*add_small_init(t_region *regions, t_page *page\
+	, size_t size, t_region *cregion)
 {
-	if (page->next == NULL && (void*)page + sizeof(t_page) < (void*)regions \
-		+ SMALL_SIZE + sizeof(t_page))
+	t_page		*npage;
+
+	if (page->next == NULL && (void*)page + size + sizeof(t_page) < \
+		(void*)regions + SMALL_SIZE)
 	{
-		page->next = sizeof(t_page) + (void*)page + size;
-		page->next->next = NULL;
-		page->next->prev = page;
-		page->next->is_free = 1;
-		page->next->size = page->size - (size + sizeof(t_page));
-		page->next->data = sizeof(t_page) + (void*)page->next;
+		npage = (void*)page + sizeof(t_page) + size;
+		npage->next = NULL;
+		npage->prev = page;
+		page->next = npage;
+		npage->is_free = 1;
+		npage->size = page->size - (size + sizeof(t_page));
+		npage->data = sizeof(t_page) + (void*)npage;
+		cregion->last_page = npage;
+		// cregion->free_size -= sizeof(t_page);
+	}
+	else if (page->size < size)
+	{
+		npage = (void*)page + sizeof(t_page) + size;
+		npage->next = page->next;
+		npage->prev = page;
+		page->next = npage;
+		npage->is_free = 1;
+		npage->size = page->size - (size + sizeof(t_page));
+		npage->data = sizeof(t_page) + (void*)npage;
+		// cregion->free_size -= sizeof(t_page);
 	}
 	page->is_free = 0;
 	page->size = size;
+	cregion->free_size = (long)(cregion->free_size - (sizeof(t_page) + size)) <= 0 ? 0 : cregion->free_size - (sizeof(t_page) + size);
 	return (page);
 }
 
@@ -78,7 +95,6 @@ t_page				*add_small(t_region *regions, size_t size)
 		cregion = add_region(regions, SMALL, size);
 		page = cregion->page;
 	}
-	cregion->free_size -= sizeof(t_page) + size;
-	add_small_init(cregion, page, size);
+	add_small_init(regions, page, size, cregion);
 	return (page->data);
 }
