@@ -6,7 +6,7 @@
 /*   By: kperreau <kperreau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/01/19 16:40:01 by kperreau          #+#    #+#             */
-/*   Updated: 2016/11/12 19:53:41 by kperreau         ###   ########.fr       */
+/*   Updated: 2016/11/24 17:44:27 by kperreau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,14 +60,16 @@ typedef struct	s_page
 }				t_page;
 
 t_region		*ft_singleton(void);
+
 void			*malloc(size_t size);
 void			free(void *ptr);
+void			*realloc(void *ptr, size_t size);
+void			*calloc(size_t nmemb, size_t size);
 t_region		*init_regions(void);
 t_page			*add_tiny(t_region *regions, size_t size);
 t_page			*add_small(t_region *regions, size_t size);
 t_page			*add_large(t_region *regions, size_t size);
 t_region		*add_region(t_region *regions, t_page_type type, size_t lsize);
-void			*realloc(void *ptr, size_t size);
 t_page_type		get_type_by_size(size_t size);
 void			mem_copy(void *src, void *dest, size_t size);
 void			ft_bzero(void *ptr, size_t size);
@@ -75,5 +77,4 @@ size_t			get_size_of_type(t_page_type type, t_region *region);
 void			ft_putnbr(long n);
 void			ft_putstr(const char *s);
 void			show_alloc_mem(void);
-
 #endif

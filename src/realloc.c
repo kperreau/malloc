@@ -6,13 +6,13 @@
 /*   By: kperreau <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/11 17:06:58 by kperreau          #+#    #+#             */
-/*   Updated: 2016/11/11 17:06:59 by kperreau         ###   ########.fr       */
+/*   Updated: 2016/11/24 19:29:52 by kperreau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "malloc.h"
 
-void				*calloc(size_t nmemb, size_t size)
+/*void				*calloc(size_t nmemb, size_t size)
 {
 	void	*mem;
 
@@ -22,7 +22,7 @@ void				*calloc(size_t nmemb, size_t size)
 	if (mem != NULL)
 		ft_bzero(mem, nmemb * size);
 	return (mem);
-}
+}*/
 
 static t_page		*search_page(t_page *pages)
 {
@@ -85,9 +85,8 @@ void				*realloc(void *ptr, size_t size)
 	region = ft_singleton();
 	if (region == NULL || search_region(region, ptr, ret) == 0)
 	{
-		show_alloc_mem();
-		write(2, "Error.\n", 7);
-		exit(-1);
+		//write(2, "Error.\n", 7);
+		//exit(-1);
 	}
 	ptr = build_realloc(ret[0], ret[1], size, ptr);
 	return (ptr);

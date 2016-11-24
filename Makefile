@@ -6,7 +6,7 @@
 #    By: kperreau <kperreau@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2014/12/05 14:10:51 by kperreau          #+#    #+#              #
-#    Updated: 2016/11/12 20:16:56 by kperreau         ###   ########.fr        #
+#    Updated: 2016/11/24 16:01:56 by kperreau         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -58,8 +58,9 @@ TOGIT =	$(SRC) \
 all: $(NAME)
 
 $(NAME): $(OBJ)
+#			@$(CC) $(FLAGS) $(OBJ) -fPIC -o $(NAME)
 			@$(CC) $(FLAGS) $(OBJ) -fPIC -shared -o $(NAME)
-			@#ln -s $(NAME) libft_malloc.so
+			@ln -s $(NAME) libft_malloc.so
 
 re: fclean all
 
@@ -72,7 +73,8 @@ fclean: clean
 			@rm -f $(NAME)
 
 %.o: %.c
-			@$(CC) -c $< $(FLAGS) -fPIC -shared -o $@
+#			@$(CC) -c $< $(FLAGS) -fPIC -shared -o $@
+			@$(CC) -c $< $(FLAGS) -fPIC -o $@
 
 git:
 		git add $(TOGIT)

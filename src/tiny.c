@@ -6,7 +6,7 @@
 /*   By: kperreau <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/11 17:05:05 by kperreau          #+#    #+#             */
-/*   Updated: 2016/11/12 21:11:21 by kperreau         ###   ########.fr       */
+/*   Updated: 2016/11/24 18:53:01 by kperreau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,6 @@ static t_page		*add_tiny_init(t_region *regions, t_page *page\
 	}
 	page->is_free = 0;
 	page->size = size;
-	// cregion->free_size = (long)(cregion->free_size - size) < 0 ? 0 : cregion->free_size - size;
 	return (page);
 }
 

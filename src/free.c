@@ -6,7 +6,7 @@
 /*   By: kperreau <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/11 17:06:58 by kperreau          #+#    #+#             */
-/*   Updated: 2016/11/11 17:06:59 by kperreau         ###   ########.fr       */
+/*   Updated: 2016/11/24 19:26:50 by kperreau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,8 +50,6 @@ static int			free_page1(t_region *region, t_page *page)
 		if (page->next)
 			page->next->prev = page;
 	}
-	// show_alloc_mem();
-	// ft_putstr(" -- TEST -- \n\n");
 	free_page2(region, page);
 	return (0);
 }
@@ -89,16 +87,15 @@ static int			search_region(t_region *regions, void *ptr)
 
 void				free(void *ptr)
 {
-	t_region		*region ;
+	t_region		*region;
 
 	if (ptr != NULL)
 	{
 		region = ft_singleton();
 		if (region == NULL || search_region(region, ptr) == 0)
 		{
-			show_alloc_mem();
-			write(2, "Error.\n", 7);
-			exit(-1);
+			//write(2, "Error.\n", 7);
+			//exit(-1);
 		}
 	}
 }

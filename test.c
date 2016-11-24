@@ -35,7 +35,7 @@ int		main(void)
 	write(1, "--START--\n", 10);
 
 	
-	
+	malloc(1);
 	for (int i=0; i < 10000; ++i)
 	{
 		// ft_putnbr(i);
@@ -43,19 +43,20 @@ int		main(void)
 		s = malloc(1000);
 		s = realloc(s, 10);
 		malloc(10);
-		// free(s);
+		//free(s);
 		s = realloc(s, 50);
 		s2 = malloc(100);
 		s2 = realloc(s2, 500);
 		malloc(10);
 		
 		
-		strcpy(s2, "12345678\n");
+		strcpy(s2, "12345678");
+		puts(s2);
 		for (int j=0; j < 500; ++j)
 			s2[j] = 'a';
-		// write(1, s, 10);
+		write(1, s2, 10);
 		free(s2);
-		// free(s);
+		free(s);
 	}
 	
 	// s2 = malloc(10);
