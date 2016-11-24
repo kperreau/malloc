@@ -24,7 +24,7 @@ INCLUDESDIR = includes
 
 # Files vars
 
-CFILES = init_regions.c malloc.c free.c tiny.c small.c realloc.c large.c
+CFILES = tools.c init_regions.c malloc.c free.c tiny.c small.c large.c realloc.c
 
 SRC = $(patsubst %, $(SRCDIR)/%, $(CFILES))
 
@@ -37,8 +37,8 @@ HEADERS = $(patsubst %, $(INCLUDESDIR)/%, $(HFILES))
 # COMPILATION
 
 #ERRORFLAGS = -Wall -Werror -Wextra -W
-# ERRORFLAGS = 
-ERRORFLAGS = -march=native -Ofast
+ERRORFLAGS = 
+# ERRORFLAGS = -march=native -Ofast
 
 INCLUDEFLAGS = -I $(INCLUDESDIR)/
 

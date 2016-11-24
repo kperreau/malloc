@@ -5,6 +5,27 @@
 
 #define NB 50000
 
+void	ft_putnbr(long n)
+{
+	char	c;
+
+	if (n < 0)
+	{
+		write(1, "-", 1);
+		n = -n;
+	}
+	if (n > 9)
+	{
+		ft_putnbr(n / 10);
+		ft_putnbr(n % 10);
+	}
+	else
+	{
+		c = 48 + n;
+		write(1, &c, 1);
+	}
+}
+
 int		main(void)
 {
 	char	*s = NULL;
@@ -13,40 +34,28 @@ int		main(void)
 
 	write(1, "--START--\n", 10);
 
-	for (int i=0; i < 100000; ++i)
+	
+	
+	for (int i=0; i < 10000; ++i)
 	{
-		s = malloc(10);
-		strcpy(s, "12345678\n");
+		// ft_putnbr(i);
+		// write(1, "\n", 1);
+		s = malloc(1000);
+		s = realloc(s, 10);
+		malloc(10);
+		// free(s);
+		s = realloc(s, 50);
+		s2 = malloc(100);
+		s2 = realloc(s2, 500);
+		malloc(10);
+		
+		
+		strcpy(s2, "12345678\n");
+		for (int j=0; j < 500; ++j)
+			s2[j] = 'a';
 		// write(1, s, 10);
-		free(s);
-	}
-	
-	malloc(152000);
-	malloc(1);
-	malloc(1);
-	malloc(1);
-	
-	malloc(700);
-	malloc(50000000);
-	
-	for (int i=0; i < NB; ++i)
-	{
-		t[i] = malloc(5730);
-		strcpy(t[i], "12345678\n");
-	}
-	
-	s = malloc(1000000);
-	
-	
-	strcpy(s, "12345678\n");
-	write(1, s, 10);
-	free(s);
-	
-	for (int i=0; i < NB; ++i)
-	{
-		malloc(1);
-		free(malloc(1250));
-		free(t[i]);
+		free(s2);
+		// free(s);
 	}
 	
 	// s2 = malloc(10);

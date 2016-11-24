@@ -68,5 +68,12 @@ t_page			*add_small(t_region *regions, size_t size);
 t_page			*add_large(t_region *regions, size_t size);
 t_region		*add_region(t_region *regions, t_page_type type, size_t lsize);
 void			*realloc(void *ptr, size_t size);
+t_page_type		get_type_by_size(size_t size);
+void			mem_copy(void *src, void *dest, size_t size);
+void			ft_bzero(void *ptr, size_t size);
+size_t			get_size_of_type(t_page_type type, t_region *region);
+void			ft_putnbr(long n);
+void			ft_putstr(const char *s);
+void			show_alloc_mem(void);
 
 #endif
