@@ -6,7 +6,7 @@
 /*   By: kperreau <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/11 17:06:58 by kperreau          #+#    #+#             */
-/*   Updated: 2016/11/11 17:06:59 by kperreau         ###   ########.fr       */
+/*   Updated: 2016/11/27 19:42:47 by kperreau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,6 @@
 
 t_page_type		get_type_by_size(size_t size)
 {
-	t_page_type		type;
-
 	if (size <= TINY_MAX)
 		return (TINY);
 	else if (size > SMALL_MAX)
@@ -25,20 +23,21 @@ t_page_type		get_type_by_size(size_t size)
 
 void			mem_copy(void *src, void *dst, size_t size)
 {
-	int		i;
-
 	if (src != NULL && dst != NULL && size > 0)
 	{
+		pthread_mutex_lock(ft_mutex());
 		while (size--)
 			*(char*)dst++ = *(char*)src++;
-		
+		pthread_mutex_unlock(ft_mutex());
 	}
 }
 
 void			ft_bzero(void *ptr, size_t size)
 {
+	pthread_mutex_lock(ft_mutex());
 	while (size--)
 		*(char*)ptr++ = 0;
+	pthread_mutex_unlock(ft_mutex());
 }
 
 size_t			get_size_of_type(t_page_type type, t_region *region)

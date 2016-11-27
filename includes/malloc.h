@@ -6,7 +6,7 @@
 /*   By: kperreau <kperreau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/01/19 16:40:01 by kperreau          #+#    #+#             */
-/*   Updated: 2016/11/24 17:44:27 by kperreau         ###   ########.fr       */
+/*   Updated: 2016/11/27 18:02:59 by kperreau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 # include <stdio.h>
 # include <unistd.h>
 # include <sys/mman.h>
+# include <pthread.h>
 
 /*
 **MALLOC VARS
@@ -77,4 +78,5 @@ size_t			get_size_of_type(t_page_type type, t_region *region);
 void			ft_putnbr(long n);
 void			ft_putstr(const char *s);
 void			show_alloc_mem(void);
+pthread_mutex_t	*ft_mutex(void);
 #endif

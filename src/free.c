@@ -6,7 +6,7 @@
 /*   By: kperreau <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/11 17:06:58 by kperreau          #+#    #+#             */
-/*   Updated: 2016/11/24 19:26:50 by kperreau         ###   ########.fr       */
+/*   Updated: 2016/11/27 19:05:14 by kperreau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,6 @@
 
 static void			free_page2(t_region *region, t_page *page)
 {
-	t_page		page_tmp;
-
 	if (page->next)
 		page->size = (size_t)(page->next) - ((size_t)page + sizeof(t_page));
 	else
@@ -34,7 +32,7 @@ static int			free_page1(t_region *region, t_page *page)
 		region->prev->next = region->next;
 		if (region->next)
 			region->next->prev = region->prev;
-		munmap((void*)region, (size_t)region + region->page->size + sizeof(t_page) + sizeof(t_region));
+		munmap((void*)region, region->page->size + sizeof(t_page) + sizeof(t_region));
 		return (0);
 	}
 	if (page->prev && page->prev->is_free)
@@ -92,10 +90,12 @@ void				free(void *ptr)
 	if (ptr != NULL)
 	{
 		region = ft_singleton();
+		pthread_mutex_lock(ft_mutex());
 		if (region == NULL || search_region(region, ptr) == 0)
 		{
 			//write(2, "Error.\n", 7);
 			//exit(-1);
 		}
+		pthread_mutex_unlock(ft_mutex());
 	}
 }

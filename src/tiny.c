@@ -6,7 +6,7 @@
 /*   By: kperreau <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/11 17:05:05 by kperreau          #+#    #+#             */
-/*   Updated: 2016/11/24 18:53:01 by kperreau         ###   ########.fr       */
+/*   Updated: 2016/11/27 17:36:42 by kperreau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,8 +45,7 @@ static void		*find_tiny_region(t_region *regions, size_t size, void *ret[2])
 	return (NULL);
 }
 
-static t_page		*add_tiny_init(t_region *regions, t_page *page\
-	, size_t size, t_region *cregion)
+static t_page		*add_tiny_init(t_page *page, size_t size, t_region *cregion)
 {
 	t_page		*npage;
 
@@ -98,6 +97,6 @@ t_page				*add_tiny(t_region *regions, size_t size)
 		cregion = add_region(regions, TINY, size);
 		page = cregion->page;
 	}
-	add_tiny_init(regions, page, size, cregion);
+	add_tiny_init(page, size, cregion);
 	return (page->data);
 }

@@ -2,69 +2,66 @@
 #include <unistd.h>
 #include <string.h>
 #include <stdio.h>
+#include <pthread.h>
 
-#define NB 50000
-
-void	ft_putnbr(long n)
+void		*func1(void *data)
 {
-	char	c;
+	int i;
+	char *s = malloc(600);
+	for (i = 0; i < 600; ++i)
+		s[i] = 'a';
+	s[i] = 0;
+	//puts(s);
+	return (data);
+}
 
-	if (n < 0)
-	{
-		write(1, "-", 1);
-		n = -n;
-	}
-	if (n > 9)
-	{
-		ft_putnbr(n / 10);
-		ft_putnbr(n % 10);
-	}
-	else
-	{
-		c = 48 + n;
-		write(1, &c, 1);
-	}
+void		*func2(void *data)
+{
+	int i;
+	char *s = malloc(900);
+	for (i = 0; i < 900; ++i)
+		s[i] = 'b';
+	s[i] = 0;
+	//puts(s);
+	return (data);
+}
+
+void		*func3(void *data)
+{
+	int i;
+	char *s = malloc(700);
+	for (i = 0; i < 700; ++i)
+		s[i] = 'c';
+	s[i] = 0;
+	//puts(s);
+	return (data);
+}
+
+void		*func4(void *data)
+{
+	int i;
+	char *s = malloc(820);
+	for (i = 0; i < 820; ++i)
+		s[i] = 'd';
+	s[i] = 0;
+	//puts(s);
+	return (data);
 }
 
 int		main(void)
-{
-	char	*s = NULL;
-	char	*s2 = NULL;
-	char	*t[NB];
+{	
+	pthread_t	thread[4];
+	void		*data;
 
-	write(1, "--START--\n", 10);
-
-	
-	malloc(1);
-	for (int i=0; i < 10000; ++i)
+	data = malloc(10);
+	for (size_t i = 0; i < 50000; ++i)
 	{
-		// ft_putnbr(i);
-		// write(1, "\n", 1);
-		s = malloc(1000);
-		s = realloc(s, 10);
-		malloc(10);
-		//free(s);
-		s = realloc(s, 50);
-		s2 = malloc(100);
-		s2 = realloc(s2, 500);
-		malloc(10);
-		
-		
-		strcpy(s2, "12345678");
-		puts(s2);
-		for (int j=0; j < 500; ++j)
-			s2[j] = 'a';
-		write(1, s2, 10);
-		free(s2);
-		free(s);
+		pthread_create(&thread[0], NULL, func1, data);
+		pthread_create(&thread[1], NULL, func2, data);
+		pthread_create(&thread[2], NULL, func3, data);
+		pthread_create(&thread[3], NULL, func4, data);
+		//pthread_join(thread[0], NULL);
+		//pthread_join(thread[1], NULL);
 	}
-	
-	// s2 = malloc(10);
-	// strcpy(s2, "edf\n");
-	// write(1, s2, 4);
-	
-	// write(1, s, 1);
-	// write(1, s2, 1);;
-	
 	return (0);
 }
