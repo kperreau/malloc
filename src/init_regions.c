@@ -6,7 +6,7 @@
 /*   By: kperreau <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/11 17:05:25 by kperreau          #+#    #+#             */
-/*   Updated: 2016/11/12 20:09:04 by kperreau         ###   ########.fr       */
+/*   Updated: 2016/12/03 19:03:55 by kperreau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,6 @@ t_region			*add_region(t_region *regions, t_page_type type\
 
 	while (regions->next != NULL)
 		regions = regions->next;
-
 	if (type == LARGE)
 		size = lsize + sizeof(t_region) + sizeof(t_page);
 	else

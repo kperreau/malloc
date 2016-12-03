@@ -6,7 +6,7 @@
 /*   By: kperreau <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/11 17:06:58 by kperreau          #+#    #+#             */
-/*   Updated: 2016/11/27 19:42:47 by kperreau         ###   ########.fr       */
+/*   Updated: 2016/12/03 19:10:54 by kperreau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,14 +30,6 @@ void			mem_copy(void *src, void *dst, size_t size)
 			*(char*)dst++ = *(char*)src++;
 		pthread_mutex_unlock(ft_mutex());
 	}
-}
-
-void			ft_bzero(void *ptr, size_t size)
-{
-	pthread_mutex_lock(ft_mutex());
-	while (size--)
-		*(char*)ptr++ = 0;
-	pthread_mutex_unlock(ft_mutex());
 }
 
 size_t			get_size_of_type(t_page_type type, t_region *region)

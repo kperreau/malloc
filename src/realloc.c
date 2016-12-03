@@ -6,23 +6,11 @@
 /*   By: kperreau <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/11 17:06:58 by kperreau          #+#    #+#             */
-/*   Updated: 2016/11/27 19:42:21 by kperreau         ###   ########.fr       */
+/*   Updated: 2016/12/03 19:04:22 by kperreau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "malloc.h"
-
-/*void				*calloc(size_t nmemb, size_t size)
-{
-	void	*mem;
-
-	if (nmemb <= 0 || size <= 0)
-		return (NULL);
-	mem = malloc(nmemb * size);
-	if (mem != NULL)
-		ft_bzero(mem, nmemb * size);
-	return (mem);
-}*/
 
 static t_page		*search_page(t_page *pages)
 {
@@ -43,7 +31,8 @@ static int			search_region(t_region *regions, void *ptr, void *ret[2])
 	result = 0;
 	while (regions != NULL)
 	{
-		if (ptr > (void*)regions && ptr <= (void*)regions->last_page + sizeof(t_page))
+		if (ptr > (void*)regions && ptr <= (void*)regions->last_page + \
+	sizeof(t_page))
 		{
 			result = 1;
 			page = search_page(ptr - sizeof(t_page));
@@ -56,10 +45,11 @@ static int			search_region(t_region *regions, void *ptr, void *ret[2])
 		}
 		regions = regions->next;
 	}
-	return (0);
+	return (result);
 }
 
-static void			*build_realloc(t_region *region, t_page *page, size_t size, void *ptr)
+static void			*build_realloc(t_region *region, t_page *page\
+	, size_t size, void *ptr)
 {
 	void	*new_ptr;
 
@@ -82,6 +72,31 @@ static void			*build_realloc(t_region *region, t_page *page, size_t size, void *
 		pthread_mutex_unlock(ft_mutex());
 		return (ptr);
 	}
+	return (ptr);
+}
+
+void				*reallocf(void *ptr, size_t size)
+{
+	t_region		*region;
+	void			*ret[2];
+	int				result;
+
+	if (ptr == NULL)
+		return (malloc(size));
+	if (size == 0)
+	{
+		free(ptr);
+		return (NULL);
+	}
+	region = ft_singleton();
+	pthread_mutex_lock(ft_mutex());
+	result = search_region(region, ptr, ret);
+	pthread_mutex_unlock(ft_mutex());
+	if (result == 1)
+		return (malloc(size));
+	if (result == 0)
+		return (malloc(size));
+	ptr = build_realloc(ret[0], ret[1], size, ptr);
 	return (ptr);
 }
 

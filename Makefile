@@ -6,7 +6,7 @@
 #    By: kperreau <kperreau@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2014/12/05 14:10:51 by kperreau          #+#    #+#              #
-#    Updated: 2016/11/27 18:03:23 by kperreau         ###   ########.fr        #
+#    Updated: 2016/12/03 19:05:31 by kperreau         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,7 +24,8 @@ INCLUDESDIR = includes
 
 # Files vars
 
-CFILES = tools.c init_regions.c malloc.c free.c tiny.c small.c large.c realloc.c
+CFILES = tools.c init_regions.c malloc.c free.c tiny.c small.c large.c \
+	realloc.c show_alloc_mem.c show_alloc_mem_str.c tools2.c
 
 SRC = $(patsubst %, $(SRCDIR)/%, $(CFILES))
 
@@ -36,11 +37,11 @@ HEADERS = $(patsubst %, $(INCLUDESDIR)/%, $(HFILES))
 
 # COMPILATION
 
-# ERRORFLAGS = -Wall -Werror -Wextra -W -march=native -Ofast
-ERRORFLAGS = 
+ERRORFLAGS = -Wall -Werror -Wextra -W #-march=native -Ofast
+# ERRORFLAGS = 
 # ERRORFLAGS = -march=native -Ofast
 
-INCLUDEFLAGS = -I $(INCLUDESDIR)/ -lpthread -D_REENTRANT
+INCLUDEFLAGS = -I $(INCLUDESDIR)/
 
 FLAGS = $(ERRORFLAGS) $(INCLUDEFLAGS) 
 
@@ -58,23 +59,21 @@ TOGIT =	$(SRC) \
 all: $(NAME)
 
 $(NAME): $(OBJ)
-#			@$(CC) $(FLAGS) $(OBJ) -fPIC -o $(NAME)
-			@$(CC) $(FLAGS) $(OBJ) -fPIC -shared -o $(NAME)
-			@ln -s $(NAME) libft_malloc.so
+			$(CC) $(FLAGS) $(OBJ) -lpthread -D_REENTRAN -fPIC -shared -o $(NAME)
+			ln -s $(NAME) libft_malloc.so
 
 re: fclean all
 
 clean:
-			@rm -f $(OBJ)
-			@rm -f libft_malloc.so
-			@rm -f $(NAME)
+			rm -f $(OBJ)
+			rm -f libft_malloc.so
+			rm -f $(NAME)
 
 fclean: clean
 			@rm -f $(NAME)
 
 %.o: %.c
-#			@$(CC) -c $< $(FLAGS) -fPIC -shared -o $@
-			@$(CC) -c $< $(FLAGS) -fPIC -o $@
+			$(CC) -c $< $(FLAGS) -o $@
 
 git:
 		git add $(TOGIT)

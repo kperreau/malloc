@@ -6,7 +6,7 @@
 /*   By: kperreau <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/11 17:05:05 by kperreau          #+#    #+#             */
-/*   Updated: 2016/11/27 17:36:42 by kperreau         ###   ########.fr       */
+/*   Updated: 2016/12/03 19:17:54 by kperreau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,13 +23,14 @@ static t_page		*find_tiny_page(t_page *pages, size_t size)
 	return (NULL);
 }
 
-static void		*find_tiny_region(t_region *regions, size_t size, void *ret[2])
+static void			*find_tiny_region(t_region *regions, size_t size\
+	, void *ret[2])
 {
 	t_page		*page;
 
 	while (regions != NULL)
 	{
-		if (regions->type == TINY && regions->free_size) //&& regions->free_size >= size)
+		if (regions->type == TINY && regions->free_size)
 		{
 			page = find_tiny_page(regions->last_page, size);
 			if (page != NULL)
@@ -38,11 +39,28 @@ static void		*find_tiny_region(t_region *regions, size_t size, void *ret[2])
 				ret[1] = regions;
 				return (ret);
 			}
-			regions->free_size = 0; //1
+			regions->free_size = 0;
 		}
 		regions = regions->next;
 	}
 	return (NULL);
+}
+
+static void			sub_add_tiny_init(t_page *page, size_t size\
+	, t_region *cregion)
+{
+	t_page		*npage;
+
+	npage = (void*)page + sizeof(t_page) + size;
+	npage->next = page->next;
+	npage->prev = page;
+	page->next = npage;
+	npage->next->prev = npage;
+	npage->is_free = 1;
+	npage->size = page->size - (size + sizeof(t_page));
+	npage->data = sizeof(t_page) + (void*)npage;
+	cregion->free_size -= sizeof(t_page);
+	cregion->free_size = 1;
 }
 
 static t_page		*add_tiny_init(t_page *page, size_t size, t_region *cregion)
@@ -60,22 +78,11 @@ static t_page		*add_tiny_init(t_page *page, size_t size, t_region *cregion)
 		npage->size = page->size - (size + sizeof(t_page));
 		npage->data = sizeof(t_page) + (void*)npage;
 		cregion->last_page = npage;
-		// cregion->free_size -= sizeof(t_page);
-		cregion->free_size = 1; // 1
+		cregion->free_size = 1;
 	}
-	else if (page->next && size < page->size && page->size - size > sizeof(t_page))
-	{
-		npage = (void*)page + sizeof(t_page) + size;
-		npage->next = page->next;
-		npage->prev = page;
-		page->next = npage;
-		npage->next->prev = npage;
-		npage->is_free = 1;
-		npage->size = page->size - (size + sizeof(t_page));
-		npage->data = sizeof(t_page) + (void*)npage;
-		cregion->free_size -= sizeof(t_page);
-		cregion->free_size = 1; // 1
-	}
+	else if (page->next && size < page->size && page->size - size > \
+	sizeof(t_page))
+		sub_add_tiny_init(page, size, cregion);
 	page->is_free = 0;
 	page->size = size;
 	return (page);
