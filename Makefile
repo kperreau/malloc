@@ -6,7 +6,7 @@
 #    By: kperreau <kperreau@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2014/12/05 14:10:51 by kperreau          #+#    #+#              #
-#    Updated: 2016/12/03 19:05:31 by kperreau         ###   ########.fr        #
+#    Updated: 2016/12/15 18:04:32 by kperreau         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -37,9 +37,7 @@ HEADERS = $(patsubst %, $(INCLUDESDIR)/%, $(HFILES))
 
 # COMPILATION
 
-ERRORFLAGS = -Wall -Werror -Wextra -W #-march=native -Ofast
-# ERRORFLAGS = 
-# ERRORFLAGS = -march=native -Ofast
+ERRORFLAGS = -Wall -Werror -Wextra -W -O2
 
 INCLUDEFLAGS = -I $(INCLUDESDIR)/
 
